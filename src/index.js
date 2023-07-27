@@ -18,7 +18,7 @@ fetchBreeds()
         element => `<option value="${element.id}">${element.name}</option>`
       )
     );
-    refs.loader.style.display = "none";
+    refs.loader.style.display = 'none';
     new SlimSelect({
       select: '.breed-select',
       settings: {
@@ -31,8 +31,9 @@ fetchBreeds()
   })
   .catch(error => {
     // refs.error.removeAttribute('hidden');
-    Notiflix.Notify.warning('  Oops! Something went wrong! Try reloading the page');
-  
+    Notiflix.Notify.warning(
+      '  Oops! Something went wrong! Try reloading the page'
+    );
   })
   .finally(() => {
     refs.loader.setAttribute('hidden', true);
@@ -46,6 +47,8 @@ function handlerChooseCat(event) {
   // refs.error.setAttribute('hidden', true);
   refs.loader.removeAttribute('hidden');
   refs.loader.style.display = 'flex';
+  refs.selectBreed.setAttribute('hidden', true);
+  refs.catInfoEl.setAttribute('hidden', true);
 
   fetchCatByBreed(breedId)
     .then(data => {
@@ -57,13 +60,16 @@ function handlerChooseCat(event) {
         <p>${elementDate.breeds[0].temperament}</p>`
         )
         .join('');
+      refs.catInfoEl.removeAttribute('hidden');
       refs.catInfoEl.innerHTML = '';
       refs.catInfoEl.insertAdjacentHTML('beforeend', markup);
       refs.loader.style.display = 'none';
     })
     .catch(error => {
       // refs.error.removeAttribute('hidden');
-      Notiflix.Notify.warning('Oops! Something went wrong! Try reloading the page');
+      Notiflix.Notify.warning(
+        'Oops! Something went wrong! Try reloading the page'
+      );
       console.log(error);
     })
     .finally(() => {
