@@ -2,6 +2,7 @@ import axios from 'axios';
 import SlimSelect from 'slim-select';
 import 'slim-select/dist/slimselect.css';
 import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import Notiflix from 'notiflix';
 const refs = {
   selectBreed: document.querySelector('.breed-select'),
   loader: document.querySelector('.loader'),
@@ -10,42 +11,41 @@ const refs = {
 };
 refs.loader.setAttribute('hidden', true);
 fetchBreeds()
-  .then(data =>
+  .then(data => {
     refs.selectBreed.insertAdjacentHTML(
       'beforeend',
       data.map(
         element => `<option value="${element.id}">${element.name}</option>`
       )
-    )
-  )
-  .then(() => {
+    );
+    refs.loader.style.display = "none";
     new SlimSelect({
-        select: '.breed-select',
-        settings: {
-            placeholderText: 'Select a cat\'s breed'
-        },
-        events: {
-            afterChange: handlerChooseCat
-        }
-    })
-    
+      select: '.breed-select',
+      settings: {
+        placeholderText: "Select a cat's breed",
+      },
+      events: {
+        afterChange: handlerChooseCat,
+      },
+    });
   })
   .catch(error => {
-    refs.error.removeAttribute('hidden');
+    // refs.error.removeAttribute('hidden');
+    Notiflix.Notify.warning('  Oops! Something went wrong! Try reloading the page');
+  
   })
   .finally(() => {
     refs.loader.setAttribute('hidden', true);
   });
 
-
-  
 refs.selectBreed.addEventListener('click', handlerChooseCat);
 
 function handlerChooseCat(event) {
   let breedId = event?.target?.value || event[0].value;
-  console.log(breedId)
-  refs.error.setAttribute('hidden', true);
-  refs.loader.removeAttribute('hidden')
+  console.log(breedId);
+  // refs.error.setAttribute('hidden', true);
+  refs.loader.removeAttribute('hidden');
+  refs.loader.style.display = 'flex';
 
   fetchCatByBreed(breedId)
     .then(data => {
@@ -57,21 +57,16 @@ function handlerChooseCat(event) {
         <p>${elementDate.breeds[0].temperament}</p>`
         )
         .join('');
-        refs.catInfoEl.innerHTML = '';
-        refs.catInfoEl.insertAdjacentHTML('beforeend', markup);
+      refs.catInfoEl.innerHTML = '';
+      refs.catInfoEl.insertAdjacentHTML('beforeend', markup);
+      refs.loader.style.display = 'none';
     })
     .catch(error => {
-      refs.error.removeAttribute('hidden');
+      // refs.error.removeAttribute('hidden');
+      Notiflix.Notify.warning('Oops! Something went wrong! Try reloading the page');
       console.log(error);
     })
     .finally(() => {
       refs.loader.setAttribute('hidden', true);
     });
 }
-
-
-
-
-
-
-  
