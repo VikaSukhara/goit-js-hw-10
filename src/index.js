@@ -10,6 +10,8 @@ const refs = {
   catInfoEl: document.querySelector('.cat-info'),
 };
 refs.loader.setAttribute('hidden', true);
+refs.selectBreed.setAttribute('hidden', true);
+
 fetchBreeds()
   .then(data => {
     refs.selectBreed.insertAdjacentHTML(
